@@ -2,11 +2,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
 import java.net.URL;
@@ -16,9 +13,9 @@ public class Parser {
     public static void main(String[] args) throws Exception {
      Elements page = getPage();
        System.out.println(page);
-        System.setProperty("webdriver.chrome.driver","/Users/lipsuke/Downloads/chromedriver");
-        WebDriver webDriver = new ChromeDriver();
-        webDriver.get("https://www.glo-story.com/home/8077-women-s-leather-jacket-5996525267439.html?search_query=WPY&results=17");
+        System.setProperty("webdriver.chrome.driver","/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
+      ChromeDriver webDriver = new ChromeDriver();
+        webDriver.get("https://www.glo-story.com/jackets/12979-Women-s-leather-jacket-5996525323579.html");
      /*  for (int i = 2; i <= 7; i++) {
             WebElement paginationBtn = webDriver.findElement(By.xpath("//*[@id=\"z0IHRoAjlM3\"]/ul/li[" + i + "]/a"));
             paginationBtn.click();
