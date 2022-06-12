@@ -12,7 +12,7 @@ public class Parser {
 
     public static void main(String[] args) throws Exception {
      Elements page = getPage();
-       System.out.println(page);
+       System.out.println("PRIVET");
         System.setProperty("webdriver.chrome.driver","/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
       ChromeDriver webDriver = new ChromeDriver();
         webDriver.get("https://www.glo-story.com/jackets/12979-Women-s-leather-jacket-5996525323579.html");
