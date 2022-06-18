@@ -1,14 +1,21 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.FindBy;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.openqa.selenium.By.className;
 import static org.openqa.selenium.By.id;
 import static org.openqa.selenium.devtools.v85.dom.DOM.focus;
 
@@ -26,7 +33,43 @@ public class Parser {
         login.sendKeys("lipsuke@gmail.com");
         password.sendKeys("Reaba1966");
         btn.click();
-        WebElement womans =webDriver.findElement(By.xpath("//*[@id=\"mega_menu_plus\"]/ul/li[6]/a/span"));
+        int count = 0;
+        for (int i = 1; i < 2; i++) {
+            webDriver.get("https://www.glo-story.com/3-women?p=" + i);
+           List<WebElement> product = webDriver.findElements(By.className("product-name"));
+           List<WebElement> price = webDriver.findElements(By.className("content_price"));
+           List<WebElement> photo = webDriver.findElements(By.className("lazy"));
+           FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/new.csv");
+           BufferedWriter buff = new BufferedWriter( csvWriter );
+           for(int j =0; j< 12; j++)
+           //for (WebElement el: product)
+                  {
+                      buff.write( product.get(j).getText()+";"+price.get(j).getText()+"\n" );
+                     // buff.write( el.getText() + "\n" );
+                      count++;
+                    //  if(count%2==0){
+                    //      continue;
+                  //    }
+               // System.out.println(count +" "+el.getText());
+            //  System.out.println(count +"  "+ el.getAttribute("style").substring(31).replaceAll("[\");]+$",""));
+            }
+            buff.flush();
+            buff.close();
+           // csvWriter.flush();
+            csvWriter.close();
+            //   WebElement tovar = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > h5 > a"));
+             //   WebElement tovarprice = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > div.content_price > span"));
+              //  WebElement picture = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.left-block > div > a.product_img_link.xxx > div > div.lazy.img-hover.bg-image.bg-menuproduct"));
+              //  System.out.println(tovar.getText() + " price  " + tovarprice.getText() + "" + picture.getAttribute("style"));
+                // picture.click();
+
+        }
+
+
+
+
+
+       /* WebElement womans =webDriver.findElement(By.xpath("//*[@id=\"mega_menu_plus\"]/ul/li[6]/a/span"));
         womans.click();
         WebElement tovar =webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > h5 > a"));
         WebElement tovarprice =webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > div.content_price > span"));
@@ -35,29 +78,52 @@ public class Parser {
         picture.click();
         WebElement photo =webDriver.findElement(By.cssSelector("#center_column > div > div > div > div.pb-left-column.col-xs-12.col-sm-6.col-md-6.col-lg-8 > div > div:nth-child(1) > a > div > img"));
         System.out.println(photo.getAttribute("src"));
-        //String element = webDriver.findElement(By.xpath("//*[@id=\"center_column\"]/div/div/div/div[2]/div/div[2]/h1")).getText();
-       // String element1 = webDriver.findElement(By.xpath("//*[@id=\"our_price_display\"]/text()")).getText();
-       // System.out.println(womans.getText());
-        //System.out.println(getElement(url));
+        WebElement womans1 =webDriver.findElement(By.xpath("//*[@id=\"mega_menu_plus\"]/ul/li[6]/a/span"));
+        womans1.click();
+        WebElement tovar1 =webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(7) > div > div.right-block > h5 > a"));
+        WebElement tovarprice1 =webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(10) > div > div.right-block > div.content_price > span"));
+        WebElement picture1 = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(10) > div > div.left-block > div > a.product_img_link.xxx > div > div.lazy.img-hover.bg-image.bg-menuproduct"));
+        System.out.println(tovar1.getText()+ " price  "+tovarprice1.getText());
+        System.out.println(picture1.getAttribute("style"));
+        picture1.click();
+        WebElement photo1 =webDriver.findElement(By.cssSelector("#center_column > div > div > div > div.pb-left-column.col-xs-12.col-sm-6.col-md-6.col-lg-8 > div > div:nth-child(1) > a > div > img"));
+        System.out.println(photo1.getAttribute("src"));
+        WebElement womans2 =webDriver.findElement(By.xpath("//*[@id=\"mega_menu_plus\"]/ul/li[6]/a/span"));
+        womans2.click();
+   /*     ChromeDriver webDriver = new ChromeDriver();
+        List<WebElement> womangoods = new ArrayList <>();
+        for (int i = 1; i < 3; i++) {
+            webDriver.get("https://www.glo-story.com/3-women?p=" + i);
+            List<WebElement> el = webDriver.findElements(By.className("product-name"));
+            System.out.println(el);
+        }*/
+    //getElements();
     }
 
+        public static void getElements() throws Exception {
 
-    public static void getElement(String url) throws IOException {
-     //   String url = ("https://www.glo-story.com/jackets/12979-Women-s-leather-jacket-5996525323579.html");
-        Document page = Jsoup.parse(new URL(url), 6000);
-       // String element = page.getElementsByClass("small").text();
-       Elements lg = page.selectXpath("/html/body/div/div[2]/div/div/div/div/div/div[2]/form/div/div[1]/input");
-       Elements pw = page.selectXpath("/html/body/div/div[2]/div/div/div/div/div/div[2]/form/div/div[2]/span/input");
-        lg.val("lipsuke@gmail.com");
-        pw.val("Reaba1966");
+            StringBuilder sbwg = new StringBuilder();
+            StringBuilder sbwgp = new StringBuilder();
+            List<String> woomangoods = new ArrayList<>();
+            List<String> woomangoodsprice = new ArrayList<>();
+           // String url = "https://www.glo-story.com/3-women?p=";
+            for (int i = 1; i < 74; i++) {
+               //  System.setProperty("webdriver.chrome.driver", "/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
+               // ChromeDriver webDriver = new ChromeDriver();
+              // webDriver.get("https://www.glo-story.com/3-women?p=" + i);
+              // String element = webDriver.findElement(By.className("price_product-price")).getText();
+                Document page = Jsoup.parse(new URL("https://www.glo-story.com/3-women?p=" + i), 60000);
+               // String element = page.select("#center_column > div > ul > li:nth-child(1) > div > div.right-block > h5 > a").text();
+                String tovar = page.getElementsByClass("product-name").text();
+                String price = page.getElementsByClass("content-price").text();
+                sbwg.append(tovar);
+                woomangoods.add(tovar);
+                sbwgp.append(price);
+                woomangoodsprice.add(price);
+            }
+            System.out.println(sbwg);
+            System.out.println(sbwgp);
+            System.out.println(woomangoodsprice.size());
+        }
     }
 
-
-
-    public static Document getPage(String url) throws IOException {
-     //   String url = ("https://www.glo-story.com/jackets/12979-Women-s-leather-jacket-5996525323579.html");
-        Document page = Jsoup.parse(new URL(url), 6000);
-        return page;
-    }
-
-    }
