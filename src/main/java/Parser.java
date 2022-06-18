@@ -34,36 +34,43 @@ public class Parser {
         password.sendKeys("Reaba1966");
         btn.click();
         int count = 0;
-        for (int i = 1; i < 2; i++) {
+        List<WebElement> product =new ArrayList <>();
+        List<WebElement> price =new ArrayList <>();
+        List<WebElement> photo =new ArrayList <>();
+        int j=0;
+        FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/new.csv");
+        BufferedWriter buff = new BufferedWriter( csvWriter );
+        for (int i = 1; i < 4; i++) {
             webDriver.get("https://www.glo-story.com/3-women?p=" + i);
-           List<WebElement> product = webDriver.findElements(By.className("product-name"));
-           List<WebElement> price = webDriver.findElements(By.className("content_price"));
-           List<WebElement> photo = webDriver.findElements(By.className("lazy"));
-           FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/new.csv");
-           BufferedWriter buff = new BufferedWriter( csvWriter );
-           for(int j =0; j< 12; j++)
+            product.addAll(webDriver.findElements(By.className("product-name")));
+            price.addAll(webDriver.findElements(By.className("content_price")));
+            photo.addAll(webDriver.findElements(By.className("lazy")));
+           for(; j< product.size() ; j++)
            //for (WebElement el: product)
                   {
-                      buff.write( product.get(j).getText()+";"+price.get(j).getText()+"\n" );
+                      if(product.get(j).getText().equals(null)|product.get(j).getText().equals("")){
+                          continue;
+                      }
+                      buff.write( product.get(j).getText()+";"+"\n" );
                      // buff.write( el.getText() + "\n" );
                       count++;
                     //  if(count%2==0){
                     //      continue;
                   //    }
-               // System.out.println(count +" "+el.getText());
+               System.out.println(count +" "+product.get(j).getText());
             //  System.out.println(count +"  "+ el.getAttribute("style").substring(31).replaceAll("[\");]+$",""));
             }
-            buff.flush();
-            buff.close();
-           // csvWriter.flush();
-            csvWriter.close();
+
             //   WebElement tovar = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > h5 > a"));
              //   WebElement tovarprice = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > div.content_price > span"));
               //  WebElement picture = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.left-block > div > a.product_img_link.xxx > div > div.lazy.img-hover.bg-image.bg-menuproduct"));
               //  System.out.println(tovar.getText() + " price  " + tovarprice.getText() + "" + picture.getAttribute("style"));
                 // picture.click();
-
         }
+        buff.flush();
+        buff.close();
+        // csvWriter.flush();
+        csvWriter.close();
 
 
 
