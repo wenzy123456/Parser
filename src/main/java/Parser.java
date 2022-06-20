@@ -38,31 +38,35 @@ public class Parser {
         List<WebElement> price =new ArrayList <>();
         List<WebElement> photo =new ArrayList <>();
         int j=0;
-        FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/photo3.csv");
+        FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/womanproduct.csv");
         BufferedWriter buff = new BufferedWriter( csvWriter );
-        for (int i = 1; i < 3; i++) {
+        for (int i = 1; i < 74; i++) {
             webDriver.get("https://www.glo-story.com/3-women?p=" + i);
             product.addAll(webDriver.findElements(By.className("product-name")));
             price.addAll(webDriver.findElements(By.className("content_price")));
             photo.addAll(webDriver.findElements(By.className("lazy")));
-           for(; j< photo.size() ; j++)
-           //for (WebElement el: product)
+           for(; j< product.size() ; j++){
+         // for (WebElement el: product){
 
-                  {
-                     if(j%2!=0){
+              /*    {
+                     if(j%2==0){
                          continue;
                       }
 
                      if(photo.get(j).getAttribute("style").equals(null)|photo.get(j).getAttribute("style").equals("")){
                           continue;
+                      }*/
+
+                      if(product.get(j).getText().equals("")){
+                          continue;
                       }
 
-                      buff.write(photo.get(j).getAttribute("style").substring(31).replaceAll("[\");]+$","")+";" +"\n");
-                     // buff.write( el.getText() + "\n" );
+                    //  buff.write(photo.get(j).getAttribute("style").substring(23).replaceAll("[\");]+$","")+"\n");
+                     buff.write( product.get(j).getText() + "\n" );
 
                       count++;
-             //  System.out.println(count +" "+price.get(j).getText());
-              System.out.println(count +"  "+ photo.get(j).getAttribute("style").substring(31).replaceAll("[\");]+$",""));
+               System.out.println(count +" "+product.get(j).getText());
+             // System.out.println(count +"  "+ photo.get(j).getAttribute("style").substring(23).replaceAll("[\");]+$",""));
             }
 
             //   WebElement tovar = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > h5 > a"));
