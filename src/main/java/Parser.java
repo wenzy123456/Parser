@@ -5,6 +5,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import java.io.BufferedWriter;
@@ -14,6 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.openqa.selenium.By.className;
 import static org.openqa.selenium.By.id;
@@ -38,36 +42,51 @@ public class Parser {
         List<WebElement> price =new ArrayList <>();
         List<WebElement> photo =new ArrayList <>();
         int j=0;
-        FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/womanproduct.csv");
+        FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/boysphoto5.csv");
         BufferedWriter buff = new BufferedWriter( csvWriter );
-        for (int i = 1; i < 74; i++) {
-            webDriver.get("https://www.glo-story.com/3-women?p=" + i);
+        for (int i = 5; i < 6; i++) {
+          //74 webDriver.get("https://www.glo-story.com/3-women?p=" + i);
+          //72  webDriver.get("https://www.glo-story.com/15-men?p=" + i);
+           //24 webDriver.get("https://www.glo-story.com/17-girls?p=" + i);
+            webDriver.get("https://www.glo-story.com/18-boys?p=" + i);
             product.addAll(webDriver.findElements(By.className("product-name")));
             price.addAll(webDriver.findElements(By.className("content_price")));
             photo.addAll(webDriver.findElements(By.className("lazy")));
-           for(; j< product.size() ; j++){
-         // for (WebElement el: product){
+                Actions builder = new Actions(webDriver);
 
-              /*    {
-                     if(j%2==0){
-                         continue;
-                      }
+            for(; j< photo.size() ; j++) {
+                // for (WebElement el: product){
+
+
+
+
+                  //  if(j%2==0){
+                   //      continue;
+                  //    }
 
                      if(photo.get(j).getAttribute("style").equals(null)|photo.get(j).getAttribute("style").equals("")){
                           continue;
-                      }*/
-
-                      if(product.get(j).getText().equals("")){
-                          continue;
                       }
 
-                    //  buff.write(photo.get(j).getAttribute("style").substring(23).replaceAll("[\");]+$","")+"\n");
-                     buff.write( product.get(j).getText() + "\n" );
+            /*    if (product.get(j).getText().equals("")) {
+                    continue;
+                }
+                Pattern pattern = Pattern.compile("[A-Z]{3,4}-\\w{4,5}");
+                Matcher matcher = pattern.matcher(product.get(j).getText());
+                while (matcher.find()) {*/
 
-                      count++;
-               System.out.println(count +" "+product.get(j).getText());
-             // System.out.println(count +"  "+ photo.get(j).getAttribute("style").substring(23).replaceAll("[\");]+$",""));
-            }
+
+                       buff.write(photo.get(j).getAttribute("style").substring(23).replaceAll("[\");]+$","")+"#{[ee]:;[en]:;[ru]:;}"+"\n");
+                    //  buff.write( price.get(j).getText() + "\n" );
+                  //  buff.write(product.get(j).getText().substring(matcher.start(), matcher.end()) + "\n");
+
+                    count++;
+                  //  System.out.println(count + " " + product.get(j).getText().substring(matcher.start(), matcher.end()));
+                    //  System.out.println(count +" "+price.get(j).getText());
+                     System.out.println(count +"  "+ photo.get(j).getAttribute("style").substring(23).replaceAll("[\");]+$",""));
+
+                }
+          //  }
 
             //   WebElement tovar = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > h5 > a"));
              //   WebElement tovarprice = webDriver.findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.right-block > div.content_price > span"));
