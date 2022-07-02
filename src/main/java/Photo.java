@@ -28,7 +28,7 @@ public class Photo {
         //   List <WebElement> product =new ArrayList <>();
         //  List<WebElement> price =new ArrayList <>();
         List <WebElement> photo = new ArrayList <>();
-        int j = 0;
+
         FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/boysphoto5.csv");
         BufferedWriter buff = new BufferedWriter(csvWriter);
         buff.write("Product code\tPair type\tThumbnail\tDetailed image\n");
@@ -36,12 +36,24 @@ public class Photo {
             webDriver.get("https://www.glo-story.com/18-boys?p=" + i);
             List <WebElement> photopage = new ArrayList <>();
             photopage.addAll(webDriver.findElements(By.className("lazy")));
-            for (WebElement el : photopage) {
-               // System.out.println("X="+el.getLocation().getX() + ";  Y="+ el.getLocation().getY());
+           for (int k = 0; k < photopage.size(); k++) {
+              // webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                // System.out.println("X="+el.getLocation().getX() + ";  Y="+ el.getLocation().getY());
+            //                                                            #center_column > div > ul > li:nth-child(1) > div > div.left-block > div > a.product_img_link.xxx > div > div
+            WebElement webElement = webDriver.findElement(By.xpath("//*[@id=\"center_column\"]/div/ul/li[1]/div/div[1]/div/a[1]/div/div[2]"));
+               photopage.get(k).findElement(By.cssSelector("#center_column > div > ul > li:nth-child(1) > div > div.left-block > div > a.product_img_link.xxx > div > div.lazy.img-hover.bg-image.bg-menuproduct")).click();
+               // webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                WebElement webElemen = webDriver.findElement(By.cssSelector("#center_column > div > div > div > div.pb-left-column.col-xs-12.col-sm-6.col-md-6.col-lg-8 > div > div.col-xs-12.col-sm-12.col-md-12.col-lg-6.mb-4 > a > div > img"));
+               webElemen.click();
+               WebElement wl = webDriver.findElement(By.cssSelector("#fancybox-container-1 > div.fancybox-inner > div.fancybox-stage > div > div > img"));
+
                 count++;
-                System.out.println(count + "  " + el.getAttribute("style").replaceAll("[\");]+$", ""));
+                // buff.write("\tM\t\t" +el.getAttribute("style").substring(23).replaceAll("[\");]+$","")+"#{[ee]:;[en]:;[ru]:;}"+"\n");
+                System.out.println(count + "  " + wl.getAttribute("src").replaceAll("[\");]+$", ""));
+                webDriver.navigate().back();
+                webDriver.navigate().back();
             }
-            webDriver.navigate().back();
+       }
     /*       // product.addAll(webDriver.findElements(By.className("product-name")));
            // price.addAll(webDriver.findElements(By.className("content_price")));
 
@@ -69,12 +81,11 @@ public class Photo {
                     System.out.println(count + "  " + photo.get(j).getAttribute("src").replaceAll("[\");]+$", ""));
                 }
             webDriver.navigate().back();
-            }
-        }
-        buff.flush();
-        buff.close();
-        csvWriter.close();
-   }*/
+            }*/
+       // }
+      //  buff.flush();
+      //  buff.close();
+      //  csvWriter.close();
+
         }
     }
-}

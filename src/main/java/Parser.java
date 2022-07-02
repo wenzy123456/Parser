@@ -44,7 +44,7 @@ public class Parser {
         int j=0;
         FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/boysphoto5.csv");
         BufferedWriter buff = new BufferedWriter( csvWriter );
-        for (int i = 5; i < 6; i++) {
+        for (int i = 1; i < 14; i++) {
           //74 webDriver.get("https://www.glo-story.com/3-women?p=" + i);
           //72  webDriver.get("https://www.glo-story.com/15-men?p=" + i);
            //24 webDriver.get("https://www.glo-story.com/17-girls?p=" + i);
@@ -57,15 +57,12 @@ public class Parser {
             for(; j< photo.size() ; j++) {
                 // for (WebElement el: product){
 
-
-
-
                   //  if(j%2==0){
                    //      continue;
                   //    }
 
                      if(photo.get(j).getAttribute("style").equals(null)|photo.get(j).getAttribute("style").equals("")){
-                          continue;
+                        continue;
                       }
 
             /*    if (product.get(j).getText().equals("")) {
@@ -84,7 +81,7 @@ public class Parser {
                   //  System.out.println(count + " " + product.get(j).getText().substring(matcher.start(), matcher.end()));
                     //  System.out.println(count +" "+price.get(j).getText());
                      System.out.println(count +"  "+ photo.get(j).getAttribute("style").substring(23).replaceAll("[\");]+$",""));
-
+               //photo.get(j).click();
                 }
           //  }
 
