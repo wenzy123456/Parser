@@ -52,7 +52,6 @@ public class Parser {
             product.addAll(webDriver.findElements(By.className("product-name")));
             price.addAll(webDriver.findElements(By.className("content_price")));
             photo.addAll(webDriver.findElements(By.className("lazy")));
-                Actions builder = new Actions(webDriver);
 
             for(; j< photo.size() ; j++) {
                 // for (WebElement el: product){

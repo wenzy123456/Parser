@@ -50,8 +50,7 @@ public class Photo {
                 count++;
                 // buff.write("\tM\t\t" +el.getAttribute("style").substring(23).replaceAll("[\");]+$","")+"#{[ee]:;[en]:;[ru]:;}"+"\n");
                 System.out.println(count + "  " + wl.getAttribute("src").replaceAll("[\");]+$", ""));
-                webDriver.navigate().back();
-                webDriver.navigate().back();
+
             }
        }
     /*       // product.addAll(webDriver.findElements(By.className("product-name")));
