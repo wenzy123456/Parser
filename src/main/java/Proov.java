@@ -19,7 +19,7 @@ public class Proov {
 
     static {
         try {
-            csvWriter = new FileWriter("/Users/lipsuke/Desktop/links2.csv");
+            csvWriter = new FileWriter("/Users/lipsuke/Desktop/links.csv");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -33,7 +33,9 @@ public class Proov {
 
     public static void main(String[] args) throws IOException {
         buff.write("Product code\tPair type\tThumbnail\tDetailed image\n");
-        getLinks("https://www.glo-story.com/18-boys?p=",2,findCode("https://www.glo-story.com/18-boys?p=",2));
+        List<String>newcodes =new ArrayList <>();
+        newcodes.add("0383");
+        getLinks("https://www.glo-story.com/18-boys?p=",2,newcodes);
         buff.flush();
         buff.close();
         csvWriter.close();
@@ -45,7 +47,7 @@ public class Proov {
            Elements links = doc.select("a[href]");
            Set <String> listLinks = new HashSet <>();
            int count = 1;
-           for (int l=0;l<codes.size();l++) {
+           for (int l = 0; l < codes.size(); l++) {
                for (Element el : links) {
                    if (el.attr("abs:href").contains(codes.get(l))) {
                        listLinks.add(el.attr("abs:href"));
@@ -63,20 +65,21 @@ public class Proov {
                firstphototext.add(el.getAttribute("src"));
            }
            List <String> photo = firstphototext.stream().distinct().collect(Collectors.toList());
-           for (int j = 0; j < photo.size(); j++) {
-               if (photo.get(j).contains("thickbox")) {
-                   if (j == 1) {
-                       buff.write("\tM\t\t" + photo.get(j).replaceAll("[\");]+$", "") + "#{[ee]:;[en]:;[ru]:;}" + "\n");
-                       System.out.println(j + " " + count++ + " " + photo.get(j));
-                   } else {
-                       System.out.println(j + " " + count++ + " " + photo.get(j));
-                       buff.write("\tA\t\t" + photo.get(j).replaceAll("[\");]+$", "") + "#{[ee]:;[en]:;[ru]:;}" + "\n");
-                   }
-               } else continue;
+           for (int l = 0; l < codes.size(); l++) {
+               for (int j = 0; j < photo.size(); j++) {
+                   if (photo.get(j).contains("thickbox")) {
+                       if (j == 1) {
+                           buff.write(codes.get(l)+"\tM\t\t" + photo.get(j).replaceAll("[\");]+$", "") + "#{[ee]:;[en]:;[ru]:;}" + "\n");
+                           System.out.println( codes.get(l) + " " + photo.get(j));
+                       } else {
+                           System.out.println(codes.get(l) + " " + photo.get(j));
+                           buff.write(codes.get(l)+ "\tA\t\t" + photo.get(j).replaceAll("[\");]+$", "") + "#{[ee]:;[en]:;[ru]:;}" + "\n");
+                       }
+                   } else continue;
+               }
            }
        }
    }
-
     public static List <String> findCode(String link, int pageQuantity) throws IOException {
         ArrayList<String> codes =new ArrayList<>();
         System.setProperty("webdriver.chrome.driver", "/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");

@@ -14,22 +14,13 @@ import java.util.regex.Pattern;
 public class Photo {
     public static void main(String[] args) throws Exception {
         System.setProperty("webdriver.chrome.driver", "/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
-        String url = ("https://www.glo-story.com/login?back=my-account");
         ChromeDriver webDriver = new ChromeDriver();
-        webDriver.get(url);
-
-        WebElement login = webDriver.findElement(By.xpath("/html/body/div/div[2]/div/div/div/div/div/div[2]/form/div/div[1]/input"));
-        WebElement password = webDriver.findElement(By.xpath("/html/body/div/div[2]/div/div/div/div/div/div[2]/form/div/div[2]/span/input"));
-        WebElement btn = webDriver.findElement(By.xpath("/html/body/div/div[2]/div/div/div/div/div/div[2]/form/div/p[2]/button"));
-        login.sendKeys("lipsuke@gmail.com");
-        password.sendKeys("Reaba1966");
-        btn.click();
         int count = 0;
         //   List <WebElement> product =new ArrayList <>();
         //  List<WebElement> price =new ArrayList <>();
         List <WebElement> photo = new ArrayList <>();
 
-        FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/boysphoto5.csv");
+        FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/photos.csv");
         BufferedWriter buff = new BufferedWriter(csvWriter);
         buff.write("Product code\tPair type\tThumbnail\tDetailed image\n");
         for (int i = 10; i < 11; i++) {

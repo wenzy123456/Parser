@@ -37,7 +37,7 @@ public class Proovcode {
 
     public static void main(String[] args) throws IOException {
      Proovcode pc = new Proovcode();
-        buff.write("Product code\tProduct type\tLanguage\tCategory\tProduct name\n");
+        buff.write("Product code\tProduct type\tLanguage\tPrice\n");
             pc.getCode("https://www.glo-story.com/18-boys?p=",14);
             pc.getCode("https://www.glo-story.com/3-women?p=",74);
             pc.getCode("https://www.glo-story.com/15-men?p=",72);
@@ -45,7 +45,6 @@ public class Proovcode {
 
         buff.flush();
         buff.close();
-        // csvWriter.flush();
         csvWriter.close();
     }
 
