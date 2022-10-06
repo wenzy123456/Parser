@@ -272,7 +272,7 @@ public class Ospig {
         buff.close();
         csvWriter.close();*/
   //  }
-    public void sleep(int seconds) {
+    public static void sleep(int seconds) {
         try {
             Thread.sleep(seconds * 1000);
         } catch (InterruptedException e) {
