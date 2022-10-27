@@ -32,16 +32,13 @@ public class OspigPage {
    int i;
    int j;
 
-    static int QuantityProduct = getQuantityProduct();
+   static int QuantityProduct = getQuantityProduct();
 
     public static void main(String[] args) throws Exception {
        // OspigPage ospigPage = new OspigPage();
       //  System.out.println(ospigPage.getQuantityProduct());
       //int QuantityProduct = getQuantityProduct();
         Ospig.sleep(70);
-        if (QuantityProduct <= 500){
-           getQuantityProduct();
-        }
 
        getDataPage(1, 1, QuantityProduct);
       //  System.out.println();
@@ -122,7 +119,7 @@ public class OspigPage {
 
             JavascriptExecutor js = (JavascriptExecutor) webDriver;
             int  n = j ;
-                 n = n + 7;
+              //   n = n + 7;
             for ( j = 0; j < n; j++) {
                 js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
                 Ospig.sleep(1);
@@ -148,8 +145,11 @@ public class OspigPage {
                 WebElement material = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[4]/div[2]/div/span"));
                 WebElement price = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[5]/div[2]/div[2]/div/span[1]/b"));
                 WebElement picture = webDriver.findElement(By.id("product_image"));
+                WebElement table = webDriver.findElement(By.className("ordertable"));
+
                 List<WebElement> colors = new ArrayList<>();
                 colors.addAll(webDriver.findElements(By.className("colorbutton")));
+
                 Ospig.sleep(2);
 
                 Pattern pattern = Pattern.compile("^[0-9]*[.,]?[0-9]{1,2}");
