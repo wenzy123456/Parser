@@ -72,8 +72,9 @@ public class OspigSessionId {
         return allCookies;
     }
     public static void getPage() throws Exception {
-       FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/ospigproov.csv", true);
+       FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/ospigproov.csv");
        BufferedWriter   buff = new BufferedWriter(csvWriter);
+       buff.write("Product code\tLanguage\tCategory\tProduct name\tЦвет (Variation feature)\tРазмер 23-70 (Variation feature)\tQuantity\tDetailed image\n");
         System.setProperty("webdriver.chrome.driver", "/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
         String url = ("https://b2b-shop.ospig.de/login.aspx?ReturnUrl=%2flogout.aspx");
         ChromeDriver webDriver = new ChromeDriver();
@@ -100,7 +101,7 @@ public class OspigSessionId {
             Ospig.sleep(1);
         }
 
-        WebElement el = webDriver.findElement(By.xpath("//*[@id=\"scrollpane\"]/div/div[172]/span/div[1]/div[2]/img"));
+        WebElement el = webDriver.findElement(By.xpath("//*[@id=\"scrollpane\"]/div/div[98]/span/div[1]/div[2]/img"));
         Ospig.sleep(3);                                        //*[@id="scrollpane"]/div/div[112]/span/div[1]/div[2]/img
         Actions action = new Actions(webDriver);                       //*[@id="scrollpane"]/div/div[199]/span/div[1]/div[2]/img
         action.doubleClick(el).perform();                              //*[@id="scrollpane"]/div/div[206]/span/div[1]/div[2]/img
@@ -116,8 +117,9 @@ public class OspigSessionId {
             }
         }
 
-        for (int g=0; g< colors.size();g++
-        ) {
+        int r =0;
+        for (int g=0; g< colors.size();g++)
+         {
 
             if ( g >= colors.size()-countDiv){
                continue;
@@ -133,8 +135,9 @@ public class OspigSessionId {
             WebElement table = webDriver.findElement(By.className("ordertable"));
             List <WebElement> tables = webDriver.findElements(By.className("ordertable"));
             List<WebElement> photos = webDriver.findElements(By.className("img-responsive"));
-            for (WebElement eltable : tables
-            ) {
+
+            for (WebElement eltable : tables)
+             {
 
                 WebElement color = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[7]/div[1]/span[2]"));
                 List <WebElement> rows_table = eltable.findElements(By.tagName("tr"));
@@ -154,7 +157,7 @@ public class OspigSessionId {
                 System.out.println(price.getText());
                 System.out.println(color.getText());
 
-                buff.write(code.getText() + "\t " +products.getText() + "\t " + material.getText() + "\t " + price.getText() + "\t " + color.getText() + "\n");
+              //  buff.write(code.getText() + "\t " +products.getText() + "\t " + material.getText() + "\t " + price.getText() + "\t " + color.getText() + "\n");
 
                 for (WebElement elm :photos
                      ) {
@@ -162,7 +165,7 @@ public class OspigSessionId {
                         continue;
                     }
                    System.out.println(elm.getAttribute("src"));
-                    buff.write(elm.getAttribute("src")+ "\n");
+                //    buff.write(elm.getAttribute("src")+ "\n");
                 }
 
                 for (int i = 0; i < columns.size(); i++) {
@@ -170,47 +173,18 @@ public class OspigSessionId {
                         continue;
                     }
                     int j = i;
+                    if(columns.get(i).getText().equals("0")){
+                        continue;
+                    }
                     map.put(titles.get(j + 1).getText(), columns.get(i).getText());
-                    buff.write(titles.get(j + 1).getText()+" "+ columns.get(i).getText()+ "\n");
+                    buff.write(code.getText()+r +"\ten\tOspig\t" +products.getText() + "\t " + color.getText()+"\t "+ titles.get(j + 1).getText()+"\t "+ columns.get(i).getText()+"\t"+photos.get(0).getAttribute("src")+ "\n");
+                    r++;
                 }
                 System.out.println(map);
-
-                //  }
-
-     /*   int rows_count = rows_table.size();
-        System.out.println(webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[7]/div[1]/span[2]")).getText());
-        for (int row = 0; row < rows_count; row++) {
-            List <WebElement> Columns_row = rows_table.get(row).findElements(By.tagName("td"));
-            int columns_count = Columns_row.size();
-            System.out.println("Number of cells In Row " + row + " are " + columns_count);
-            for (int column = 0; column < columns_count; column++) {
-                String celtext = Columns_row.get(column).getText();
-                System.out.println("Cell Value of row number " + row + " and column number " + column + " Is " + celtext);
-            }
-        }*/
-
-        /*  for (WebElement webElement :colors
-             ) {
-
-
-            Actions builder = new Actions (webDriver);
-            builder.moveToElement(webElement);
-            builder.clickAndHold();
-            Ospig.sleep(2);
-            builder.build().perform();
-           // builder.moveToElement(webElement).build().perform();
-            WebElement toolTipElement = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[7]/div[2]/div[1]"));
-            System.out.println(toolTipElement.getText());
-
-        }*/
             }
 
-      /*   WebElement elm = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[1]/span"));
-            Ospig.sleep(1);
-            Actions action2 = new Actions(webDriver);
-            action2.doubleClick(elm).perform();
-            Ospig.sleep(3);*/
         }
+
         buff.flush();
         buff.close();
         csvWriter.close();
