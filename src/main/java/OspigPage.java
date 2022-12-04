@@ -1,28 +1,16 @@
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.safari.ConnectionClosedException;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.Test;
 
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.SimpleScriptContext;
 import java.io.*;
 import java.text.DecimalFormat;
-import java.time.Duration;
 import java.util.*;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.testng.AssertJUnit.assertEquals;
 
 
@@ -31,26 +19,15 @@ public class OspigPage {
    int j;
    static int n ;
 
-   static int QuantityProduct = getQuantityProduct();
+  // static int QuantityProduct = getQuantityProduct();
 
     public static void main(String[] args) throws Exception {
-       // OspigPage ospigPage = new OspigPage();
-      //  System.out.println(ospigPage.getQuantityProduct());
-      //int QuantityProduct = getQuantityProduct();
-        Ospig.sleep(70);
-
-       getDataPage(45, 560, QuantityProduct);
-      //  System.out.println();
-     //   ospigPage.getDataPage(0,72);
-     //   ospigPage.getDataPage(7,143);
-     //   ospigPage.getDataPage(14,214);
-      //  ospigPage.getDataPage(21,285);
-     //   ospigPage.getDataPage(28,356);
-      //  ospigPage.getDataPage(35,427);
-     //   ospigPage.getDataPage(42, ospigPage.getQuantityProduct());
+      //  Ospig.sleep(70);
+     //  getDataPage(1, 1, QuantityProduct);
+        OspigPage.getQuantityProduct();
 
     }
-    public static int getQuantityProduct(){
+    public static List <String> getQuantityProduct(){
         System.setProperty("webdriver.chrome.driver", "/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
         String url = ("https://b2b-shop.ospig.de/login.aspx?ReturnUrl=%2flogout.aspx");
         ChromeDriver webDriver = new ChromeDriver();
@@ -72,9 +49,6 @@ public class OspigPage {
         String url1 = ("https://b2b-shop.ospig.de/default.aspx#/search");
         webDriver.get(url1);
         Ospig.sleep(30);
-        //SessionId sessionId = webDriver.getSessionId();
-        //  webDriver.findElement(By.xpath("//*[@id=\"scrollpane\"]/div/div[1]/span/div[1]/div[2]/img[1]")).click();
-        //  webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[1]/span")).click();
         List <WebElement> product = new ArrayList <>();
         JavascriptExecutor js = (JavascriptExecutor) webDriver;
         for (int l=0; l < 50; l++) {
@@ -83,8 +57,19 @@ public class OspigPage {
         }
         product.addAll(webDriver.findElements(By.className("img")));
         System.out.println(product.size());
+        List <String> codes= new ArrayList <>();
+        for(int i=product.size(); i>0;i--) {
+            StringBuilder sbDiv = new StringBuilder();
+            sbDiv.append("//*[@id=\"scrollpane\"]/div/div[");
+            sbDiv.append(i);
+            sbDiv.append("]/span/div[2]/div[2]/div[1]/a");
+            String sDivNumber = sbDiv.toString();
+           // System.out.println(i+" "+webDriver.findElement(By.xpath(sDivNumber)).getText());
+            codes.add(webDriver.findElement(By.xpath(sDivNumber)).getText());
+        }
+        getCodes(codes);
         webDriver.close();
-        return  product.size();
+        return  codes;
     }
 
     public static void getDataPage(int j, int i, int QuantityProduct) throws IOException, InterruptedException, NoSuchElementException {
@@ -138,9 +123,10 @@ public class OspigPage {
                 action.doubleClick(el).perform();
                 Ospig.sleep(2);
 
-                OspigPage.getPage(webDriver);
 
-                WebElement code = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[2]/span"));
+               OspigPage.getPage(webDriver);
+
+               WebElement code = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[2]/span"));
                 WebElement products = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[3]/span"));
                 WebElement material = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[4]/div[2]/div/span"));
                 WebElement price = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[5]/div[2]/div[2]/div/span[1]/b"));
@@ -155,11 +141,8 @@ public class OspigPage {
                 Pattern pattern = Pattern.compile("^[0-9]*[.,]?[0-9]{1,2}");
                 Matcher matcher = pattern.matcher(price.getText());
                 while (matcher.find()) {
-                    //  FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/ospigf.csv", true);
-                    //   BufferedWriter buff = new BufferedWriter(csvWriter);
                     String floatPrice = new DecimalFormat("#0.00").format(Float.parseFloat(price.getText().substring(matcher.start(), matcher.end()).replace(",", ".")) * 2);
                     buff.write(code.getText() + "\t " + products.getText() + "\t " + floatPrice + "\t " + picture.getAttribute("src") + "\n");
-                    // System.out.println(count + " " + price.get(k).getText() + " " + floatPrice);
                 }
 
 
@@ -199,27 +182,6 @@ public class OspigPage {
         }
         catch (Exception ex) {
             System.out.println("opanki" + j + " ;" + i);
-          /*  if ((i >= 1) & (i <= 142)) {
-                j = 8;
-            }
-            if ((i >= 143) & (i <= 213)) {
-                j = 9;
-            }
-            if ((i >= 214) & (i <= 284)) {
-                j = 14;
-            }
-            if ((i >= 285) & (i <= 355)) {
-                j = 21;
-            }
-            if ((i >= 356) & (i <= 426)) {
-                j = 28;
-            }
-            if ((i >= 427) & (i <= 497)) {
-                j = 35;
-            }
-            if ((i >= 498) & (i <= QuantityProduct)) {
-                j = 42;
-            }*/
             j= j+5;
             if(j>=50){
                 j=j-7;
@@ -227,8 +189,8 @@ public class OspigPage {
             System.out.println(j + " ; " + i +" ; "+QuantityProduct);
             buff.flush();
             buff.close();
-            csvWriter.close();
-            webDriver.quit();
+           csvWriter.close();
+           webDriver.quit();
             getDataPage(j,i,QuantityProduct);
         }
         buff.flush();
@@ -311,4 +273,55 @@ public class OspigPage {
         buff.close();
         csvWriter.close();
     }
+    public static List<String> getCodes(List<String>code) {
+        List<String> newcode = new LinkedList<>();
+        for (int i = 0; i < code.size(); i++) {
+            String s1 = code.get( i );
+            for (int j = 0; j < code.size(); j++) {
+                String s2 = code.get( j );
+                if (i == j) {
+                    continue;
+                }
+                if (s1.equals( s2 )) {
+                    newcode.add( s2 );
+                }
+
+            }
+
+        }
+        Iterator iterator = newcode.iterator();
+        List<String> fin = new LinkedList<>();
+       // Set<String> newfin = new LinkedHashSet<>();
+
+        while (iterator.hasNext()) {
+            fin.add( String.valueOf( iterator.next() ) );
+        }
+     /*   for (String el : code) {
+            System.out.println( el );
+        }
+        System.out.println( "--------------" );*/
+        HashMap<Integer, String> map = new HashMap<>();
+        for (int i = 0; i < fin.size(); i++) {
+            int count = 0;
+            for (int j = 0; j < code.size(); j++) {
+                if (code.get( j ).equals( fin.get( i ) )) {
+                    map.put( j, String.valueOf( new StringBuilder( code.get( j ) ).append( "-" ).append( count++ )));
+                }
+            }
+        }
+
+        for (int j =0; j<code.size(); j++) {
+            for (Map.Entry<Integer, String> item : map.entrySet()) {
+                code.set( item.getKey(), item.getValue() );
+            }
+        }
+        int x =0;
+        for (String el : code) {
+            ++x;
+            System.out.println(x+" "+ el );
+        }
+        return code;
+    }
+
+
 }
