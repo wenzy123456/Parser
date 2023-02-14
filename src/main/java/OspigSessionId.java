@@ -19,10 +19,9 @@ public class OspigSessionId {
 
 
     public static void main(String[] args) throws Exception {
-      // System.out.println(OspigPage.getQuantityProduct());
-       OspigSessionId.turnPage(479,getWebDriver());
-       // OspigSessionId.getProduct(getWebDriver());
-       // OspigSessionId.getPage(424,));
+      // OspigSessionId.turnPage(466,getWebDriver());
+       OspigSessionId.getCategory(getWebDriver());
+
     }
 
     public static ChromeDriver getWebDriver() {
@@ -57,7 +56,7 @@ public class OspigSessionId {
         return allCookies;
     }
 
-    public static void getPage(int divNumber, ChromeDriver webDriver) throws Exception {
+    public static void getPage(int divNumber, String prCode,ChromeDriver webDriver) throws Exception {
         // получение основных данных со страницы
         FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/ospigproov.csv",true );
         BufferedWriter buff = new BufferedWriter(csvWriter);
@@ -115,6 +114,12 @@ public class OspigSessionId {
             WebElement price = webDriver.findElement(By.xpath("//*[@id=\"page-wrapper\"]/div[2]/div[2]/div/div[5]/div[2]/div[2]/div/span[1]/b"));
             WebElement picture = webDriver.findElement(By.id("product_image"));
             WebElement table = webDriver.findElement(By.className("ordertable"));
+            //получаем код товара со страницы и сравниваем его с приходящим кодом товара
+            //если они неодинаковые
+            String prcode = code.getText();
+            if(!prCode.equals(prcode)){
+                prcode = prCode;
+             }
             // записываем в лист все таблицы страницы
             List <WebElement> tables = webDriver.findElements(By.className("ordertable"));
             List <WebElement> photos = webDriver.findElements(By.className("img-responsive"));
@@ -130,7 +135,7 @@ public class OspigSessionId {
                 LinkedHashMap <String, String> map = new LinkedHashMap <>();
 
                 System.out.println(titles.get(1).getText());
-                System.out.println(code.getText());
+                System.out.println(prcode);
                 System.out.println(products.getText());
                 System.out.println(material.getText());
                 System.out.println(price.getText());
@@ -160,7 +165,7 @@ public class OspigSessionId {
                             continue;
                         }
                         //System.out.println(elm.getAttribute("src"));
-                        buffPhoto.write(code.getText() + r + "\tA\t " + elm.getAttribute("src") + "\n");
+                        buffPhoto.write(prCode + r + "\tA\t " + elm.getAttribute("src") + "\n");
                     }
                     Pattern pattern = Pattern.compile("^[0-9]*[.,]?[0-9]{1,2}");
                     Matcher matcher = pattern.matcher(price.getText());
@@ -170,17 +175,19 @@ public class OspigSessionId {
                         //  if(photos.get(0).getAttribute("src").equals(null)){
                         //     photos.get(0).getAttribute("src").toString()="";
                         // }
-                        if(photos.get(0).getAttribute("src")==null){
-                            photos.get(0).getAttribute("src").equals("");
-                        }
+                        // if(photos.get(0).getAttribute("src")==null){
+                        //     photos.get(0).getAttribute("src").equals("");
+                        //  }
 
 
-                        if(titles.get(1).getText().contains("Länge:")) {
-                            buff.write(code.getText() + r + "\tru\tOspig\t" + products.getText() + "\t " + color.getText() + "\t " + titles.get(j + 1).getText() + "/" + titles.get(1).getText().substring(6).trim() + "\t " + columns.get(i).getText() + "\t" + photos.get(0).getAttribute("src") + "\t" + code.getText().replaceAll("\\s+", "") + "\t" + material.getText() + "\t" + floatPrice + "\n");
+                        if (titles.get(1).getText().contains("Länge:")) {
+                            buff.write(prcode + r + "\tru\tOspig\t" + products.getText() + "\t " + color.getText() + "\t " + titles.get(j + 1).getText() + "/" + titles.get(1).getText().substring(6).trim() + "\t " + columns.get(i).getText() + "\t" + photos.get(0).getAttribute("src") + "\t" + code.getText().replaceAll("\\s+", "") + "\t" + material.getText() + "\t" + floatPrice + "\n");
+                            r++;
+                            //добавил скобки после else
+                        } else {
+                            buff.write(prcode + r + "\tru\tOspig\t" + products.getText() + "\t " + color.getText() + "\t " + titles.get(j + 1).getText() + "\t " + columns.get(i).getText() + "\t" + photos.get(0).getAttribute("src") + "\t" + code.getText().replaceAll("\\s+", "") + "\t" + material.getText() + "\t" + floatPrice + "\n");
                             r++;
                         }
-                     else    buff.write(code.getText() + r + "\tru\tOspig\t" + products.getText() + "\t " + color.getText() + "\t " + titles.get(j + 1).getText() + "\t " + columns.get(i).getText() + "\t" + photos.get(0).getAttribute("src") + "\t" + code.getText().replaceAll("\\s+", "") + "\t" + material.getText() + "\t" + floatPrice + "\n");
-                        r++;
                     }
                 }
               //  System.out.println(map);
@@ -202,20 +209,33 @@ public class OspigSessionId {
     public static void turnPage(int w,ChromeDriver webDriver) throws Exception {
         //ChromeDriver webDriver = getWebDriver();
         int i = 0;
+
+        List<String> allCodes = OspigPage.getQuantityProduct(webDriver);
+
         try {
           //  List <WebElement> product = getProduct(webDriver);
           //  findProduct(w, webDriver);
            // int size = OspigPage.getQuantityProduct();
-           getMainPage(webDriver);
+            getMainPage(webDriver);
             findProduct(w,webDriver);
-            for (i = w; i <= 586;  i++) {
-                getPage(i, webDriver);
+          //  int y = w;
+
+            for (i= w-1 ; i <= allCodes.size(); i++) {
+               String prCode= allCodes.get(i);
+               int z =i;
+                getPage(z+1,prCode, webDriver);
                 Ospig.sleep(1);
             }
         } catch (Exception exception) {
             getMainPage(webDriver);
             findProduct(i,webDriver);
-            turnPage(i,webDriver);
+            for (; i <= allCodes.size(); i++) {
+                int j = i;
+                String prCode= allCodes.get(i);
+                getPage(j+1,prCode, webDriver);
+                Ospig.sleep(1);
+            }
+
         }
         webDriver.quit();
     }
@@ -236,11 +256,14 @@ public static void findProduct(int i, ChromeDriver webDriver){
     if( i> 250 & i <=400) {
         n =35;
     }
-    if( i> 400 & i <=600) {
+    if( i> 400 & i <=500) {
         n =40;
     }
+    if( i> 500 & i <=600) {
+        n =48;
+    }
     if(i>600){
-        n=45;
+        n=48;
     }
 
         for (int j = 0; j < n; j++) {
@@ -248,11 +271,12 @@ public static void findProduct(int i, ChromeDriver webDriver){
             Ospig.sleep(1);
         }
 }
-public static List<WebElement> getProduct(ChromeDriver webDriver) throws IOException {
-    FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/paddocks.csv");
+public static List<WebElement> getCategory(ChromeDriver webDriver) throws IOException {
+    FileWriter csvWriter = new FileWriter("/Users/lipsuke/Desktop/categories13.02.23.csv",true);
     BufferedWriter buff = new BufferedWriter(csvWriter);
+    buff.write("Product code\tLanguage\tCategory\tFeatures\tSecondary categories\n");
     LinkedHashMap <String, String> map = new LinkedHashMap <>();
-    buff.write("Product code\tSecondary categories\n");
+   // buff.write("Product code\tSecondary categories\n");
         //ChromeDriver webDriver = getWebDriver();
     // System.setProperty("webdriver.chrome.driver", "/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
     String url = ("https://b2b-shop.ospig.de/login.aspx?ReturnUrl=%2flogout.aspx");
@@ -274,18 +298,31 @@ public static List<WebElement> getProduct(ChromeDriver webDriver) throws IOExcep
     String url1 = ("https://b2b-shop.ospig.de/default.aspx#/search");
     webDriver.get(url1);
     Ospig.sleep(30);
-    WebElement webElement = webDriver.findElement(By.xpath("//*[@id=\"side-menu\"]/ul/li[1]/span"));
+    ///меняем li при след.бренде
+    WebElement webElement = webDriver.findElement(By.xpath("//*[@id=\"side-menu\"]/ul/li[3]/span"));
     webElement.click();
     List <WebElement> categories = new ArrayList <>();
-    for (int z = 2; z < 5; z++) {
-        if (z==9){
+     ///paddocks
+  /*  for (int z = 2; z < 13; z++) {
+
+        if ((z>=5)&&(z<=11)){
             continue;
         }
-        if (z==11){
+    ///S4
+    for (int z = 2; z < 15; z++) {
+
+      if ((z>=4)&&(z<=13)){
+          continue;
+      }*/
+      /// Redpoint
+     for (int z = 3; z < 13; z++) {
+
+        if ((z>=4)&&(z<=11)){
             continue;
         }
         StringBuilder sbDiv = new StringBuilder();
-        sbDiv.append("//*[@id=\"side-menu\"]/ul/li[1]/ul/li[");
+       ///меняем li при след.бренде
+        sbDiv.append("//*[@id=\"side-menu\"]/ul/li[3]/ul/li[");
         sbDiv.append(z);
         sbDiv.append("]/span");
         String sDivNumber = sbDiv.toString();
@@ -323,14 +360,14 @@ public static List<WebElement> getProduct(ChromeDriver webDriver) throws IOExcep
            //    map.put(code.get(i).getText() + "0",value);
           //  }
            System.out.println(i + "\t" + code.get(i).getText() + "0" + "\t" + webElement.getText() + "///"+elc.getText());
-            buff.write(code.get(i).getText()+"0" +"\t"+"Ospig///"+ webElement.getText()+"///"+elc.getText()+"\n");
+            buff.write(code.get(i).getText()+"0" +"\t"+"en"+"\t"+"Ospig"+"\t"+ webElement.getText()+"\t"+elc.getText()+"\n");
         }
     }
 
-    for (Map.Entry entry: map.entrySet()) {
+  /*  for (Map.Entry entry: map.entrySet()) {
         System.out.println(entry);
         buff.write(entry+"\n");
-    }
+    }*/
     buff.flush();
     buff.close();
     csvWriter.close();
@@ -358,5 +395,6 @@ public static void getMainPage(ChromeDriver webDriver){
     webDriver.get(url1);
     Ospig.sleep(30);
 }
+
 
 }

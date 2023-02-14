@@ -19,18 +19,18 @@ public class OspigPage {
    int j;
    static int n ;
 
-  // static int QuantityProduct = getQuantityProduct();
+   int QuantityProduct = getQuantityProduct(OspigSessionId.getWebDriver()).size();
 
     public static void main(String[] args) throws Exception {
       //  Ospig.sleep(70);
      //  getDataPage(1, 1, QuantityProduct);
-        OspigPage.getQuantityProduct();
+        OspigPage.getQuantityProduct(OspigSessionId.getWebDriver());
 
     }
-    public static List <String> getQuantityProduct(){
+    public static List <String> getQuantityProduct(ChromeDriver webDriver){
         System.setProperty("webdriver.chrome.driver", "/Users/lipsuke/Downloads/Parser/.idea/selenium/chromedriver");
         String url = ("https://b2b-shop.ospig.de/login.aspx?ReturnUrl=%2flogout.aspx");
-        ChromeDriver webDriver = new ChromeDriver();
+       // ChromeDriver webDriver = new ChromeDriver();
         webDriver.get(url);
         Ospig.sleep(2);
         WebElement login = webDriver.findElement(By.xpath("//*[@id=\"UserEmail\"]"));
@@ -55,10 +55,14 @@ public class OspigPage {
             js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
             Ospig.sleep(1);
         }
+    //  for (int l=0; l < 50; l++) {
+         //   js.executeScript("window.scrollTo(document.body.scrollHeight,0)");
+          //  Ospig.sleep(1);
+     //  }
         product.addAll(webDriver.findElements(By.className("img")));
         System.out.println(product.size());
         List <String> codes= new ArrayList <>();
-        for(int i=product.size(); i>0;i--) {
+        for(int i=1; i<=product.size(); i++) {
             StringBuilder sbDiv = new StringBuilder();
             sbDiv.append("//*[@id=\"scrollpane\"]/div/div[");
             sbDiv.append(i);
@@ -68,7 +72,7 @@ public class OspigPage {
             codes.add(webDriver.findElement(By.xpath(sDivNumber)).getText());
         }
         getCodes(codes);
-        webDriver.close();
+       // webDriver.close();
         return  codes;
     }
 
